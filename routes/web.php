@@ -50,7 +50,4 @@ Route::middleware([
     Route::put('/assign/deactivate/{id}', [AssignStudentController::class, 'deactivate'])->name('assign.deactivate');
     Route::post('/assign-student/upgrade/{id}', [AssignStudentController::class, 'upgrade'])->name('assign-student.upgrade');
 
-
-
-
 });
