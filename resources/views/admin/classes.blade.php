@@ -11,7 +11,7 @@
             });
         </script>
     @endif
-    <!--Add Subject Modal -->
+    <!--Add Class Modal -->
     <div class="modal fade" id="subject-add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -82,6 +82,11 @@
                         <div class="mb-3">
                             <label for="simpleinput" class="form-label">Teacher name</label>
                             <input type="text" id="simpleinput" class="form-control" name="teacher">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="simpleinput" class="form-label">Class Fee (Rs)</label>
+                            <input type="number" id="simpleinput" class="form-control" name="class_fee">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -174,6 +179,29 @@
         </div>
     </div>
 
+    <!-- Fee Modal -->
+<div class="modal fade" id="updateFeeModal" tabindex="-1" aria-labelledby="updateFeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateFeeModalLabel">Update Class Fee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="feeUpdateForm">
+                    <div class="mb-3">
+                        <label for="new_fee" class="form-label">New Class Fee</label>
+                        <input type="number" class="form-control" id="new_fee" name="new_fee" required>
+                    </div>
+                    <input type="hidden" id="class_id" name="class_id">
+                    <input type="hidden" id="old_fee" name="old_fee">
+                    <button type="submit" class="btn btn-primary">Update Fee</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
     <div class="card">
@@ -194,6 +222,7 @@
                             <th scope="col">Subject</th>
                             <th scope="col">Teacher</th>
                             <th scope="col">New/Old</th>
+                            <th scope="col">Class Fee</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -205,6 +234,14 @@
                                 <td>{{ $class->subject ? $class->subject->name : 'N/A' }}</td>
                                 <td>{{ $class->teacher }}</td>
                                 <td>{{ $class->new_old_status}}</td>
+                                <td>
+                                    {{ $class->class_fee }}
+                                    @if(!empty($class->class_fee))
+                                        <button id="fee-update" class="btn btn-outline-info" data-id="{{ $class->id }}" data-fee="{{ $class->class_fee }}">Update</button>
+                                    @endif
+                                </td>
+                                
+                                
                                 <td>
                                     <a href="{{ route('assign-student', ['id' => $class->id]) }}" class="btn btn-success">Assign Students</a>
                                     <button class="btn btn-outline-info" data-bs-toggle="modal"
@@ -312,6 +349,62 @@
             });
         }
 
+
+</script>
+
+<script>
+    document.querySelectorAll('#fee-update').forEach(button => {
+    button.addEventListener('click', function() {
+        const classId = this.getAttribute('data-id');
+        const oldFee = this.getAttribute('data-fee');
+        
+        // Set the old fee and class id in the modal form
+        document.getElementById('class_id').value = classId;
+        document.getElementById('old_fee').value = oldFee;
+        document.getElementById('new_fee').value = oldFee; // Optionally pre-fill with old fee
+
+        // Show the modal
+        new bootstrap.Modal(document.getElementById('updateFeeModal')).show();
+    });
+});
+
+document.getElementById('feeUpdateForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const classId = document.getElementById('class_id').value;
+    const oldFee = document.getElementById('old_fee').value;
+    const newFee = document.getElementById('new_fee').value;
+
+    // Send data to the backend
+    fetch(`/update-class-fee/${classId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ old_fee: oldFee, new_fee: newFee })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Class fee updated successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                location.reload(); // Reload page to see updated fee
+            });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the class fee.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+    });
+});
 
 </script>
 @endsection
