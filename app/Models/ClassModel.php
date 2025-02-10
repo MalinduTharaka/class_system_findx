@@ -17,6 +17,7 @@ class ClassModel extends Model
         'grade_id',
         'teacher',
         'new_old_status',
+        'class_fee',
     ];
 
     // Relationship with Subject

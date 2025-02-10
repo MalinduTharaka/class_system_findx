@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AssignStudentController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ClassesController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeSubjectController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 
 Route::get('/', function () {
@@ -42,6 +44,9 @@ Route::middleware([
     Route::post('/classes/store', [ClassesController::class, 'store'])->name('classes.store');
     Route::put('/classes/update/{id}', [ClassesController::class, 'update'])->name('classes.update');
     Route::put('/classes/delete/{id}', [ClassesController::class, 'delete'])->name('classes.delete');
+    Route::post('/update-class-fee/{classId}', [ClassesController::class, 'updateClassFee']);
+
+    
 
     //Assign Student Routes
     Route::get('/assign-student/{id}', [AssignStudentController::class, 'index'])->name('assign-student');
@@ -49,5 +54,9 @@ Route::middleware([
     Route::put('/assign-student/update/{id}', [AssignStudentController::class, 'update'])->name('assign-student.update');
     Route::put('/assign/deactivate/{id}', [AssignStudentController::class, 'deactivate'])->name('assign.deactivate');
     Route::post('/assign-student/upgrade/{id}', [AssignStudentController::class, 'upgrade'])->name('assign-student.upgrade');
+    Route::post('/assign/create', [AssignStudentController::class, 'createAndAssign'])->name('assign.create');
+
+
+
 
 });

@@ -24,7 +24,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Student Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" action="/student/create">
@@ -54,7 +54,7 @@
 
                                 <div class="mb-3">
                                     <label for="simpleinput" class="form-label">Student Contact number</label>
-                                    <input type="number" id="simpleinput" class="form-control" name="student_contact">
+                                    <input type="number" id="simpleinput" class="form-control" name="student_contact" required>
                                 </div>
 
                                 <div class="mb-3">
