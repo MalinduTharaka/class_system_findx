@@ -56,7 +56,11 @@ Route::middleware([
     Route::post('/assign-student/upgrade/{id}', [AssignStudentController::class, 'upgrade'])->name('assign-student.upgrade');
     Route::post('/assign/create', [AssignStudentController::class, 'createAndAssign'])->name('assign.create');
 
+    // Attendances Routes
+    Route::get('/attendances', [AttendanceController::class, 'index']);
+    Route::post('/attendances/store', [AttendanceController::class, 'storeAttendance']);
 
-
+    //Payment Routes
+    Route::post('/pay-class-fee', [PaymentController::class, 'payClassFee'])->name('pay-class-fee');
 
 });
